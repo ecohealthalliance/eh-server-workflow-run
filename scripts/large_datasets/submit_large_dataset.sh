@@ -9,7 +9,7 @@
 
 
 # Run the R script
-Rscript  large_dataset.R 
+/usr/local/bin/Rscript large_dataset.R 
 
 
 # Wait for this job to finish
