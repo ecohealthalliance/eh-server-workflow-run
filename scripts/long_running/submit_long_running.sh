@@ -5,4 +5,13 @@
 #SBATCH --mem=4G                     # Memory needed (adjust as required)
                       
                       
-Rscript long_running_script.R        # Run the R script
+
+# Run the R script
+/usr/local/bin/Rscript   script_long_running.R
+
+
+
+# Use sacct to get resource usage and append it to a fileormat=JobID,JobName,Partition,MaxRSS,Elapsed,State,CPUTime,TotalCPU >> ~/eh-server-workflow-run/test/resource_usage.txt
+
+
+sacct -j $SLURM_JOB_ID --format=JobID,JobName,Partition,MaxRSS,Elapsed,State,CPUTime,TotalCPU >> resource_usage.txt
