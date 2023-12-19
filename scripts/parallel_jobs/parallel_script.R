@@ -1,17 +1,22 @@
-# parallel_script.R
-library(parallel)
+# load packages -----------------------------------------------------------
+library(foreach)
+library(doParallel)
 
-# Define a function to be run in parallel
-myFunction <- function(id) {
-  Sys.sleep(5)  # Simulates some computation
-  return(paste("Processed by", id))
-}
+# set number of cores -----------------------------------------------------
+workers <- 10
+cl <- parallel::makeCluster(workers)
+# register the cluster for using foreach
+doParallel::registerDoParallel(cl)
 
-# Detect the number of cores available
-no_cores <- detectCores()
+# run some time-intensive task --------------------------------------------
+x <- iris[which(iris[,5] != "setosa"), c(1,5)]
+trials <- 10000
 
-# Run the function in parallel
-results <- mclapply(1:no_cores, myFunction, mc.cores = no_cores)
+r <- foreach(icount(trials), 
+             .combine=cbind) %dopar% {
+               ind <- sample(100, 100, replace=TRUE)
+               result1 <- glm(x[ind,2]~x[ind,1], family=binomial(logit))
+               coefficients(result1)
+             }
 
-# Print the results
-print(results)
+head(r[[1]])

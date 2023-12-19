@@ -1,19 +1,22 @@
 #!/bin/bash
-#SBATCH --job-name=parallel_job     # Job name
-#SBATCH --output=parallel_res.txt   # Standard output and error log
-#SBATCH --ntasks=1                  # Run a single task
-#SBATCH --cpus-per-task=4           # Number of CPU cores per task
-#SBATCH --time=01:00:00             # Time limit hrs:min:sec (optional)
-#SBATCH --mem=2000                  # Memory needed (optional)
 
-                
-
-# Run the R script
-/usr/local/bin/Rscript   parallel_script.R
+#SBATCH --requeue               # Requeue the job in case of failure
 
 
+#SBATCH --nodes=1               # Number of nodes to use
+#SBATCH --tasks-per-node=1      # Number of tasks per node
+#SBATCH --cpus-per-task=20      # Number of CPU cores per task
+#SBATCH --partition=all         # Partition to submit to
+#SBATCH --mem=50G               # Memory allocation (50 GB)
+#SBATCH --time=00-0:4:0         # Time limit (days-hours:minutes:seconds)
 
-# Use sacct to get resource usage and append it to a fileormat=JobID,JobName,Partition,MaxRSS,Elapsed,State,CPUTime,TotalCPU >> ~/eh-server-workflow-run/test/resource_usage.txt
+#SBATCH --chdir=/home/espirado/scripts-test  # Working directory
+#SBATCH --output=/home/espirado/scripts-test/output.txt   # Standard output file
+#SBATCH --error=/home/espirado/scripts-test/error.txt     # Standard error file
+
+# Load R (if required, adjust if R is loaded differently in your environment)
+#cd /home/espirado/scripts-test
 
 
-sacct -j $SLURM_JOB_ID --format=JobID,JobName,Partition,MaxRSS,Elapsed,State,CPUTime,TotalCPU >> resource_usage.txt
+# Execute the R script
+srun /usr/local/bin/Rscript --no-save /home/espirado/scripts-test/paralell.R
