@@ -73,6 +73,24 @@ srun --partition=all  --nodes 2 --ntasks 10 --cpus-per-task 2  --mem=1G --time=0
 
 
 ### Slurm Directives
+- `Worker` Nodes (Compute Nodes)
+ - Also known as compute nodes, these are the servers or machines in a cluster where the actual computational workloads (jobs) are executed. Each worker node typically has its own set of resources like CPUs, memory, storage, and possibly GPUs.
+- `Controller`: The controller, often referred to as slurmctld (Slurm controller daemon), is a central management daemon that oversees all the scheduling   of jobs and resources. It is responsible for:
+  - Allocating resources to jobs. 
+  - Monitoring jobs and nodes.
+  - Managing the job queue.
+
+- `Partitions`: In Slurm, a partition is a logical grouping of nodes and can be thought of as a "queue" where jobs are submitted. Each partition can have its own set of configurations, such as:
+  - Limits on job sizes.
+  - Time limits.
+  - Access control (which users or groups can submit jobs to it).
+  - Default and maximum number of nodes allowed per job.
+
+- `Job Scheduling`: This refers to how Slurm decides where and when to run submitted jobs. The scheduler takes into account:
+     - The resources requested by each job (like CPUs, memory, time).
+     - The availability of resources on nodes.
+     - The policies set on partitions.
+     - Priorities of jobs (which can be influenced by factors like user priority, job size, waiting time).
 - `#SBATCH`: Used for Slurm directives. These lines are shell comments but are interpreted by Slurm.
 - `--job-name`: Sets a name for easier job identification.
 - `--output`: Specifies where to write standard output and error logs.
