@@ -13,9 +13,64 @@ This guide outlines the process for running various analytic workflows on the EH
 
 ---
 
-## Basic Job Submission
+
 ### Objective
 To demonstrate how to submit simple R scripts that require minimal computation or memory in a Slurm-managed environment.
+
+## Basic Job Submission
+A job script is just a script submitted to Slurm.
+
+```
+#!/bin/bash
+
+# Job Options- must be before *any* executable lines
+
+#SBATCH --job-name="HelloWorld"
+#SBATCH --output=HelloWorld.%j.out
+
+echo "Hello, World"
+```
+
+The hash-bang line ensures you get the shell you intend (`bash` is the default).  Everything that follows is executed within the job.  Submit this with:
+
+```
+sbatch test.sh
+```
+
+One distinguishing feature of a Slurm batch job is that the script can contain options for the `sbatch` command.  The `sbatch` command has a bunch of different options to control the job and its execution- while you can use these on the command line, having these options within the script ensures consistent execution.
+
+Any options you add on the command line override options in the script.
+
+
+## single line job submission 
+
+A situation where you just want to run an Rscript with slurm 
+
+```
+myString <- "Hello, World!"
+
+print ( myString)
+```
+
+srun --partition=all  --nodes=1 --ntasks=1  --mem=10G --time=00:00:10 Rscript test.R 
+```
+--partition=all: Specifies the partition (or queue) where the job should run. In this case, it's the all partition.
+--nodes=1: Requests one node for the job.
+--ntasks=1: Specifies that one task is to be launched. This is typically used for parallel jobs, but specifying one means your job will only start a single instance of the task.
+--mem=10G: Requests 10 gigabytes of memory for the job.
+--time=00:00:10: Sets the time limit for the job. In this case, it's 10 seconds, which is quite short. Make sure this duration is sufficient for your script to complete. For longer scripts, you'll need to increase this time.
+Rscript test.R: The command to execute the R script named test.R.
+
+```
+
+To request one node, with 10 tasks and 2 CPUs per task (a total of 20 CPUs), 1GB of memory, for one hour 
+
+srun --partition=all  --nodes 1 --ntasks 10 --cpus-per-task 2  --mem=1G --time=01:00:00 
+
+To request two nodes, each with 10 tasks per node and 2 CPUs per task (a total of 40 CPUs), 1GB of memory, for one hour
+
+srun --partition=all  --nodes 2 --ntasks 10 --cpus-per-task 2  --mem=1G --time=01:00:00 
+
 
 ### Slurm Directives
 - `#SBATCH`: Used for Slurm directives. These lines are shell comments but are interpreted by Slurm.
@@ -24,6 +79,7 @@ To demonstrate how to submit simple R scripts that require minimal computation o
 - `--time`: (Optional) Sets the maximum allowed time for the job.
 - `--mem`: (Optional) Defines the amount of memory required.
 - `--cpus-per-task`: Specifies the number of CPU cores per task; crucial for parallel processing.
+
 
 ### Submitting the Job
 Submit your job using the `sbatch` command:
