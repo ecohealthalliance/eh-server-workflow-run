@@ -9,11 +9,11 @@ library(targets)
 
 # Set target options:
 tar_option_set(
-    controller = crew.cluster::crew_controller_slurm(
-      workers = 2,
-      slurm_cpus_per_task = 1,
-      slurm_time_minutes = 10,
-      slurm_partition = "all")
+  controller = crew.cluster::crew_controller_slurm(
+    workers = 4,
+    slurm_cpus_per_task = 1,
+    slurm_time_minutes = 10,
+    slurm_partition = "all")
 )
 
 # Replace the target list below with your own:
