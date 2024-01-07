@@ -10,6 +10,7 @@ This guide outlines the process for running various analytic workflows on the EH
 4. [Interactive Jobs](#interactive-jobs)
 5. [Long-Running Jobs](#long-running-jobs)
 6. [Utilizing GPU Resources](#utilizing-gpu-resources)
+7. [Crew cluster](#Crew)
 
 ---
 
