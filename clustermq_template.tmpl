@@ -1,0 +1,8 @@
+#!/bin/bash
+#SBATCH --job-name={{ test }}           # Job name
+#SBATCH --output={{ log_file | /dev/null }} # Log file
+#SBATCH --cpus-per-task={{ cores | 2 }}     # Number of cores
+#SBATCH --mem-per-cpu={{ memory | 1024 }}   # Memory per core (in MB)
+#SBATCH --time={{ walltime | 0:01:00 }}     # Time limit (D-HH:MM:SS)
+
+{{ job }}

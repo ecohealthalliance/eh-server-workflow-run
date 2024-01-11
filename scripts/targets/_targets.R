@@ -16,6 +16,12 @@ tar_option_set(
       slurm_partition = "all")
 )
 
+controller$start()
+
+controller$push( # Should see a job submission message.
+  name = "do work",
+ 
+
 # Replace the target list below with your own:
 list(
   tar_target(
@@ -31,3 +37,5 @@ list(
     pattern = map(data)
   )
 )
+)
+controller$wait()
