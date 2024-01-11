@@ -5,22 +5,39 @@
 # install.packages(c("targets", "crew", "crew.cluster")
 # Load packages required to define the pipeline:
 library(targets)
+library(tibble)
+library(dplyr)
 # library(tarchetypes) # Load other packages as needed.
-
+Sys.setenv("PATH"=paste0(Sys.getenv("PATH"), ":/usr/local/bin"))
 # Set target options:
 tar_option_set(
-    controller = crew.cluster::crew_controller_slurm(
-      workers = 2,
-      slurm_cpus_per_task = 1,
-      slurm_time_minutes = 10,
-      slurm_partition = "all")
+  controller = crew.cluster::crew_controller_slurm(
+    workers = 2,
+    slurm_cpus_per_task = 1,
+    slurm_time_minutes = 10,
+    slurm_partition = "all",
+    slurm_log_output = "slurm_log.txt",
+    slurm_log_error = "slurm_error.txt",
+    tls_enable = NULL,
+    tls_config = NULL,
+    tls = crew::crew_tls(mode = "automatic"),
+    verbose = TRUE,
+    seconds_idle = 300,
+    script_lines = c(
+      "#SBATCH --account=eco",
+      "#SBATCH --partition=all"
+      
+    ),
+    host=Sys.info()["nodename"]
+    
+  )
 )
 
-controller$start()
+#controller$start()
 
-controller$push( # Should see a job submission message.
-  name = "do work",
- 
+#controller$push( # Should see a job submission message.
+# name = "do work",
+
 
 # Replace the target list below with your own:
 list(
@@ -37,5 +54,5 @@ list(
     pattern = map(data)
   )
 )
-)
-controller$wait()
+#)
+#controller$wait()
