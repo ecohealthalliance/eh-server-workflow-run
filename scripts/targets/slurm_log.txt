@@ -1,0 +1,22 @@
+
+R version 4.3.0 (2023-04-21) -- "Already Tomorrow"
+Copyright (C) 2023 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> crew::crew_worker(settings = list(url = "wss://controller.local.dev:46247/1/2bc01d03cd22d69fd3fce253", autoexit = TRUE, maxtasks = Inf, idletime = 3e+05, walltime = Inf, timerstart = 0L, cleanup = 1L, tls = c("-----BEGIN CERTIFICATE-----\nMIIFTzCCAzegAwIBAgIBATANBgkqhkiG9w0BAQsFADA/MR0wGwYDVQQDDBRjb250\ncm9sbGVyLmxvY2FsLmRldjERMA8GA1UECgwITmFub25leHQxCzAJBgNVBAYTAkpQ\nMB4XDTAxMDEwMTAwMDAwMFoXDTMwMTIzMTIzNTk1OVowPzEdMBsGA1UEAwwUY29u\ndHJvbGxlci5sb2NhbC5kZXYxETAPBgNVBAoMCE5hbm9uZXh0MQswCQYDVQQGEwJK\nUDCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALqGDUFPevL4Hyde0f7y\nfkpJf+WmkWjc2QaswFU5sasxF0R7bbVXe2OiKBFVLonph0/TK6JfgaY+eQ0elEsQ\nZuRdymmxz2mYS/kUUnXDD+Cx73NrAkn9NuTyt8RMTSzS+WRnUMajxNPPiigRz8pt\nue8GUYou/xpcfpbPO/WKPqgS45y3Zr8JpDLmEoaEEdD935p2E1F9UDFknZIxsR2B\n7fW+Kr6sHXADkbpKKZLTzb3Jstn8cFdaHxUMbGWWx0ffaYA3GqMPP21XMOJGBeVH\na8qS9+ftBJlf/f7jbz+zwFg1ybSaax2Sa5UAyl46RbPmkclRggQ0jU4chI5sLWzX\n8ISm7bANPHIhtlBZRT37I1AZ1p2G/7WH5AjjLC3HWC71HupCirWeNE/g/k6e/fOL\n0TGMDtCF+Vz9zag0GyqHbYPTXQ9WbCSi3VHtKFNqV2lU7yEUT+WJlUoR/dxwSNi1\naoWvFmaKrguSYKCw8rfRSYQmPDCg3dL9/ASB4rZc65okZQSf+sX8XT+Qcqy/zz+L\n84H4KWbHnhZ/b0ZEt3bSMDmCcty9wTzwPUJFaBlPBya7Jer7IQzyENM2A950aUeZ\nKLqBC3nF4Imd9PX+GMwaR2B/I8FK/BZI7nZldjg1Hx93X1VNP46o6TZ+Is0RZQXe\n25NTyZhp4lkw/7aZskDnyXITAgMBAAGjVjBUMBIGA1UdEwEB/wQIMAYBAf8CAQAw\nHQYDVR0OBBYEFF1YtBCxgwlWJM1MgJGGW+hWgkopMB8GA1UdIwQYMBaAFF1YtBCx\ngwlWJM1MgJGGW+hWgkopMA0GCSqGSIb3DQEBCwUAA4ICAQANu3AxdJOFL3J2sNwe\n/UVQqSboTbjlOQqDtUFjoUvn2LEBegctTfXJGEdR9L4cHCi5wfTcMkO0cQfuh7s8\nbkSHqYl0UIgaqvxFQ+2FvtWmBEVJAQm6xjYzKJocTiw9ziRtQMvz84WIEYJ60h5N\nhRZvDUhVJjv9dKcMrIVhhvkHYz/cYPq+U1ooMx1dS9vmFfKaeJcl4OROcAvsgl6b\nJJr1CwtEd4JCnrUgijVpKyc02qNV72U0iRwZ7J4Vor6bpsIYEwVfLsJN6+uy0UKt\nreY6C3Z9CbUgZQuEUau5YTfUM4/3Lgc4V56jKx3I12BZGwcOhoYijG49yRAXE4yL\nWGuooo95mKpQ1TxOiGEYDxfKt0BtaROXglvom7ie36mqmUJs606Y60wm/MilR61U\n/hokgHQPKfh+XK6lVLqn5p3I0arGDZ1zapVuQoFw+Njau/kD3L+IT0XiXXnCCgSM\nKg4vE16lomOkwR1X9pX9WJJvEogHq/e04xXDEYK0Yh+Zwp+glAWVtZRp3waSx7P0\n7YK0tgm9rV1rmf7lnWuhMfkwrjyMu5ghXwGx0RB2MaMNEyEdcGF+7t0MEjAyRTmC\n+QVNJyFnsD7lLeOWaLItehmFBN/TYV/tc+0wyg+9nLV5yJovCW4FvKyYc9LZ5AYf\njUD4q3BpMf8rLBBkiXvYjRthnA==\n-----END CERTIFICATE-----\n", ""), rs = c(10407L, 292126749L, -853929926L, -1595150221L, -929537256L, -1037594055L, 240516262L)), launcher = "19600a1944a2c76e9140bdbe", worker = 1L, instance = "2bc01d03cd22d69fd3fce253")
+> 
+> 
