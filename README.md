@@ -1,25 +1,37 @@
+
 # eh-server-workflow-run
 
 ## Overview
-This guide outlines the process for running various analytic workflows on the EHA infrastructure using Slurm. It covers a range of topics from basic job submissions to advanced utilization of resources, including handling large datasets, interactive job execution, management of long-running processes, and leveraging GPU resources.
+This guide outlines the process for running various analytic workflows on the EHA infrastructure using the SLURM workload manager (formerly <ins>S</ins>imple <ins>L</ins>inux <ins>U</ins>tility for <ins>R</ins>esource <ins>M</ins>anagement). It covers various topics from basic job submissions to advanced utilization of resources, including handling large datasets, interactive job execution, batch job submission, management of long-running processes, and leveraging GPU resources. Workload managers like SLURM have three major benefits.
+
+1. Parallel computing: Workload managers provide tools to start, stop, and monitor parallel jobs
+2. Resource management: Workload managers help manage resource allocation. For example, they can impose time or resource limits on jobs or provide a single access point to multiple physical servers.
+3. Task scheduling: Workload managers help arbitrate job submission by providing a job queue. That means jobs can be submitted immediately and only run when resources become available.  
 
 ## Table of Contents
-1. [Basic Job Submission](#basic-job-submission)
-2. [Parallel Processing in R](#parallel-processing-in-r)
-3. [Handling Large Datasets](#handling-large-datasets)
-4. [Interactive Jobs](#interactive-jobs)
-5. [Long-Running Jobs](#long-running-jobs)
-6. [Utilizing GPU Resources](#utilizing-gpu-resources)
-7. [Crew cluster](#Crew)
+1. [Workload manager overview](#workload-managers)
+2. [EHA compute resources](#compute-resources)
+3. [Basic Job Submission](#basic-job-submission)
+5. [Handling Large Datasets](#handling-large-datasets)
+6. [Interactive Jobs](#interactive-jobs)
+7. [Long-Running Jobs](#long-running-jobs)
+8. [Utilizing GPU Resources](#utilizing-gpu-resources)
+9. [Workflow management](#workflow-management) 
+10. [Parallel Processing in R](#parallel-processing-in-r)
+11. [Targets workflow manager](#targets)
+12. [Crew cluster](#Crew)
 
 ---
-
 
 ### Objective
 To demonstrate how to submit simple R scripts that require minimal computation or memory in a Slurm-managed environment.
 
+## Workload manager overview
+
+Interacting with compute resources often involves tools that help manage the workflow of individual projects, such as `targets` or `snakemake`, as well as tools that manage the workload of all the different jobs submitted to the server, such as `SLURM`. Workload managers prevent conflict by establishing a job queue and a priority list of jobs. This allows users to submit jobs that automatically start when resources become available without having to first communicate with all the other users of the server. In addition, workload managers provide tools to assist in parallel computing tasks. Interacting with the workload manager can be done directly from the command line or from within project workflow management tools. 
+
 ## Basic Job Submission
-A job script is just a script submitted to Slurm.
+At it's core a job script is just a script submitted to Slurm that requests access to resources.
 
 ```
 #!/bin/bash
@@ -101,7 +113,7 @@ srun --partition=all  --nodes 2 --ntasks 10 --cpus-per-task 2  --mem=1G --time=0
 
 
 ### Submitting the Job
-Submit your job using the `sbatch` command:
+Submit your job using the `sbatch` command. This submits your job to the queue. It will be run whenever resources become available.
 ```bash
 sbatch submit_simple.sh
 
@@ -115,10 +127,71 @@ To check the status of your job, use the squeue command:
 squeue --user=[your_username]
 ```
 
-### Parallel Processing in R
+## Handling Large Datasets
 
-The `parallel` package in R provides straightforward tools for parallel computing.
 
-# Key Functions 
-`detectCores()`: Identifies the number of available CPU cores.
-` mclapply() `: A parallelized version of lapply for applying functions over lists/vectors in parallel.
+## Interactive Jobs
+
+
+## Long-Running Jobs
+
+
+## Workflow management
+Workflow management tools provide a means to organize, automate, and connect all the different parts of a research project. Scripts that collect, clean, and analyze data often require different methods, packages, or even software. Without a workflow management tool each step would have to be run by hand every time the data changes or analaysis approaches are refined. This can be tedious and often leads to problems when the steps of a project are run out of order, lowering reproducibility of results. The two main workflow management tools used at EHA are
+
+1. [targets](https://books.ropensci.org/targets/) for projects that use `R` and
+2. [snakemake](https://snakemake.readthedocs.io/en/stable/) for projects that use `python`
+
+Both worklfow managers provide methods to interact direclty the SLURM workload manager. Additional information is avialable for accessing SLURM for both [targets](https://books.ropensci.org/targets/hpc.html) and [snakemake](https://snakemake.readthedocs.io/en/v7.19.1/executing/cluster.html). Further information on using SLURM with targets can be found [below](#Targets workflow manager)
+
+https://snakemake.readthedocs.io/en/stable/
+
+
+## Parallel Processing in R
+
+There are a number of packages that enable parallel processing in R. The [parallel](https://bookdown.org/rdpeng/rprogdatascience/parallel-computation.html) and the [future](https://dcgerard.github.io/advancedr/09_future.html) packages are two common options. See the provided links for more information on each approach. 
+
+A fundamental concept in parallel computing is [Amdahl's law](https://en.wikipedia.org/wiki/Amdahl%27s_law). Due to the accumulation of overhead when scheduling and launching parallel tasks, **running a job across more cores in parallel does not always produce faster results**. That means using every available core for a task will generally not make things faster. Always save some compute power for background tasks and, if possible, identify the expected speedup before launching a highly parallel job by running a small test beforehand to prevent occupying resources that do provide any benefit.
+
+![Amdahl's law](https://en.wikipedia.org/wiki/File:AmdahlsLaw.svg)
+
+## Targets workflow manager
+
+Resources for learning about and utilizing the `targets` project management framework is available in the [EHA handbook](https://ecohealthalliance.github.io/eha-ma-handbook/3-projects.html). In brief, targets, splits a project into skippable chunks. If chunks become outdated due to new data or updated analysis, they can be re-run without having to start the project pipeline from the begining. Targets also provides conveniet methods to interact with AWS storage and workload managers such as SLURM.
+
+### Branching
+
+In additional targets provides it's own method to intelligently manage parallel jobs through the use of [dynamic](https://books.ropensci.org/targets/dynamic.html) and [static](https://books.ropensci.org/targets/static.html) branching. Branching further splits up each skippable project chunk into independant computational tasks. For example, branching can be used to fit a model to every row of a dataframe or to repeat the same task across every file in a directory. While branching can seem daunting at first it provides a convenient way to add parallel computing to a project. Branches represent independent tasks. For intensive tasks, targets can interact with `SLURM` using distributed worker frameworks such as [crew](https://books.ropensci.org/targets/crew.html).
+
+### Crew cluster
+
+Targets leverages parallel computing to efficiently process a large and complex pipeline by running multiple independant targets at the same time. `crew` permits these targets to be run on high-performance computing platforms. Invoking the crew controller involves adding a piece of code at the top of the `_targets.R` script. That lets targets know how many workers to use.
+
+```
+
+# Define how to interact with SLURM
+slurm <-  crew_controller_slurm(
+    slurm_job_name = 'testrun',
+    slurm_partition = 'ph2', # What partition to you want to run your job on? The options are 
+    seconds_wall = 3600, # The maximum time you want your job to run
+    # slurm_memory_gigabytes_per_cpu = 1.8, # How much memory you wish to request for each task
+    slurm_cpus_per_task = 1L, # The desired number of simultaneous tasks
+    tasks_max = 1L,
+    script_lines = c(
+        "export MODULEPATH=/etc/modulefiles:/usr/share/modulefiles:/apps/modulefiles",
+        "source /etc/profile.d/modules.sh",
+        "source ~/.bashrc",
+        "module load R/4.2.0"
+  )
+
+# Tell targets to use the SLURM crew controller when allocating jobs
+tar_option_set(
+  deployment = 'worker',
+  storage = 'worker',
+  controller = slurm,
+  error = 'stop'
+)
+
+```
+
+### Example targets scripts that use SLURM
