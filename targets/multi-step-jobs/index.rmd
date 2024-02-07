@@ -1,0 +1,44 @@
+---
+title: "SLURM Job Execution with `targets`"
+author: "espira"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+## Overview
+
+This document describes a computational pipeline built with the `targets` R package, designed for execution on a SLURM-managed high-performance computing (HPC) system. The pipeline demonstrates the integration of R-based data analysis workflows with SLURM, enabling scalable and efficient computation.
+
+## Job Structure
+
+The job comprises several stages, each representing a different phase of data processing and analysis:
+
+1. **Data Preparation**: Generates a synthetic dataset for analysis.
+2. **Data Analysis**: Performs basic statistical analysis on the dataset.
+3. **Model Fitting**: Applies a linear model to the data.
+4. **Post-processing**: Summarizes the model's results.
+5. **Reporting**: Generates a plot from the dataset.
+
+## `targets` and SLURM Integration
+
+The `targets` package orchestrates the workflow, defining dependencies between stages and ensuring that computations are executed in the correct order. Integration with SLURM is achieved using the `crew` package, which allows `targets` to distribute tasks across multiple compute nodes managed by SLURM.
+
+### Configuration
+
+The SLURM configuration for the job is specified using the `tar_option_set` function from the `targets` package, combined with `crew.cluster::crew_controller_slurm` to define resource allocations and other SLURM parameters:
+
+```r
+library(targets)
+library(crew)
+
+tar_option_set(
+  controller = crew.cluster::crew_controller_slurm(
+    workers = 2,
+    slurm_cpus_per_task = 1,
+    slurm_time_minutes = 10,
+    slurm_partition = "all",
+    slurm_log_output = "slurm_log.txt",
+    slurm_log_error = "slurm_error.txt",
+    verbose = TRUE
+  )
+)

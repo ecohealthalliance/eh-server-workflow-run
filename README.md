@@ -111,6 +111,36 @@ srun --partition=all  --nodes 2 --ntasks 10 --cpus-per-task 2  --mem=1G --time=0
 - `--mem`: (Optional) Defines the amount of memory required.
 - `--cpus-per-task`: Specifies the number of CPU cores per task; crucial for parallel processing.
 
+- ` Submit a job`  : sbatch .jobs/jobFile.job
+
+- ` See the entire job queue (note that you are allowed 5000 in queue at once)`: squeue
+
+- ` See only jobs for a given user`: squeue -u username
+
+- `  kill a job with ID $PID` : scancel $PID
+
+- ` Kill ALL jobs for a user` : scancel -u username
+
+- ` Kill all pending jobs` :  scancel -u username --state=pending
+
+- `Stop and restart jobs interactively with SLURM's scancel.`:  scancel -s SIGSTOP job id
+
+- `Run interactive node with 16 cores (12 plus all memory on 1 node) for 4 hours ` : srun -n 12 -N 1 --mem=64000 --time 4:0:0 --pty bash
+
+- `Claim interactive node for exclusive use, 8 hours ` srun --exclusive --time 8:0:0 --pty bash
+
+- `Same as above, but with X11 forwarding ` : srun --exclusive --time 8:0:0 --x11 --pty bash
+ - ` Same as above, but with priority over your other jobs ` : srun --nice=9999 --exclusive --time 8:0:0 --x11 --pty -p dev -t 12:00 bash
+
+- `Count number of running / in queue jobs ` : squeue -u username | wc -l
+
+- `Get estimated start times for your jobs (when sycorax is busy)` : squeue --start -u username
+
+- `Request big memory node for 4 hours` : srun -N 1 -p bigmem -t 4:0:0 --pty bash
+
+- `Run a job with 1 node, 4 CPU cores, and 2 GPU`: srun -N 1 -n 4 --gres=gpy:2 -p gpu --qos=gpu
+
+
 
 ### Submitting the Job
 Submit your job using the `sbatch` command. This submits your job to the queue. It will be run whenever resources become available.
@@ -141,10 +171,13 @@ Workflow management tools provide a means to organize, automate, and connect all
 
 1. [targets](https://books.ropensci.org/targets/) for projects that use `R` and
 2. [snakemake](https://snakemake.readthedocs.io/en/stable/) for projects that use `python`
+3. [Nextflow](https://www.nextflow.io/) Develop container-backed, reproducible workflows portable across computational platforms including local, HPC schedulers, AWS Batch, Google Genomics Pipelines, and Kubernetes
+4. [Metaflow](https://metaflow.org/) Metaflow is a human-friendly Python/R library that helps scientists and engineers build and manage real-life data science projects.
 
 Both worklfow managers provide methods to interact direclty the SLURM workload manager. Additional information is avialable for accessing SLURM for both [targets](https://books.ropensci.org/targets/hpc.html) and [snakemake](https://snakemake.readthedocs.io/en/v7.19.1/executing/cluster.html). Further information on using SLURM with targets can be found [below](#Targets workflow manager)
 
 https://snakemake.readthedocs.io/en/stable/
+
 
 
 ## Parallel Processing in R
@@ -195,3 +228,63 @@ tar_option_set(
 ```
 
 ### Example targets scripts that use SLURM
+
+```
+# Created by use_targets().
+# Follow the comments below to fill in this target script.
+# Then follow the manual to check and run the pipeline:
+#   https://books.ropensci.org/targets/walkthrough.html#inspect-the-pipeline
+# install.packages(c("targets", "crew", "crew.cluster")
+# Load packages required to define the pipeline:
+library(targets)
+library(tibble)
+library(dplyr)
+# library(tarchetypes) # Load other packages as needed.
+Sys.setenv("PATH"=paste0(Sys.getenv("PATH"), ":/usr/local/bin"))
+# Set target options:
+tar_option_set(
+  controller = crew.cluster::crew_controller_slurm(
+    workers = 2,
+    slurm_cpus_per_task = 1,
+    slurm_time_minutes = 10,
+    slurm_partition = "all",
+    slurm_log_output = "slurm_log.txt",
+    slurm_log_error = "slurm_error.txt",
+    tls_enable = NULL,
+    tls_config = NULL,
+    tls = crew::crew_tls(mode = "automatic"),
+    verbose = TRUE,
+    seconds_idle = 300,
+    script_lines = c(
+      "#SBATCH --account=eco",
+      "#SBATCH --nodelist=aegypti_worker",
+      "#SBATCH --partition=all"
+      
+    ),
+    host=Sys.info()["nodename"]
+    
+  )
+)
+
+controller$start()
+
+# Replace the target list below with your own:
+list(
+  tar_target(
+    name = data,
+    command = tibble(x = rnorm(100), y = rnorm(100), tar_group = rep(1:10, 10)),
+    iteration = "group",
+    # format = "feather" # efficient storage for large data frames,
+    
+  ),
+  tar_target(
+    name = model,
+    command = coefficients(lm(y ~ x, data = data)),
+    pattern = map(data)
+  )
+)
+
+```
+
+
+
