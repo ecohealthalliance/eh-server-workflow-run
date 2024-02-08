@@ -202,27 +202,26 @@ Targets leverages parallel computing to efficiently process a large and complex 
 ```
 
 # Define how to interact with SLURM
-slurm <-  crew_controller_slurm(
-    slurm_job_name = 'testrun',
-    slurm_partition = 'ph2', # What partition to you want to run your job on? The options are 
-    seconds_wall = 3600, # The maximum time you want your job to run
-    # slurm_memory_gigabytes_per_cpu = 1.8, # How much memory you wish to request for each task
-    slurm_cpus_per_task = 1L, # The desired number of simultaneous tasks
-    tasks_max = 1L,
-    script_lines = c(
-        "export MODULEPATH=/etc/modulefiles:/usr/share/modulefiles:/apps/modulefiles",
-        "source /etc/profile.d/modules.sh",
-        "source ~/.bashrc",
-        "module load R/4.2.0"
-  )
-
-# Tell targets to use the SLURM crew controller when allocating jobs
 tar_option_set(
-  deployment = 'worker',
-  storage = 'worker',
-  controller = slurm,
-  error = 'stop'
-)
+  packages = c("tibble", "dplyr"),
+  resources = list(
+    slurm_cpus_per_task = 1,
+    slurm_time_minutes = 10,
+    slurm_partition = "all"
+  ),
+  controller = crew.cluster::crew_controller_slurm(
+    workers = 2,
+    slurm_cpus_per_task = 1,
+    slurm_time_minutes = 10,
+    slurm_partition = "all",
+    slurm_log_output = "slurm_log.txt",
+    slurm_log_error = "slurm_error.txt",
+    verbose = TRUE,
+    seconds_idle = 300,
+    script_lines = c(
+      "#SBATCH --account=eco",
+      "#SBATCH --partition=all"
+    ),
 
 ```
 
