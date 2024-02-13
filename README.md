@@ -12,14 +12,11 @@ This guide outlines the process for running various analytic workflows on the EH
 1. [Workload manager overview](#workload-managers)
 2. [EHA compute resources](#compute-resources)
 3. [Basic Job Submission](#basic-job-submission)
-5. [Handling Large Datasets](#handling-large-datasets)
-6. [Interactive Jobs](#interactive-jobs)
-7. [Long-Running Jobs](#long-running-jobs)
-8. [Utilizing GPU Resources](#utilizing-gpu-resources)
-9. [Workflow management](#workflow-management) 
-10. [Parallel Processing in R](#parallel-processing-in-r)
-11. [Targets workflow manager](#targets)
-12. [Crew cluster](#Crew)
+4. [Utilizing GPU Resources](#utilizing-gpu-resources)
+5. [Workflow management](#workflow-management) 
+6. [Parallel Processing in R](#parallel-processing-in-r)
+7. [Targets workflow manager](#targets)
+8. [Crew cluster](#Crew)
 
 ---
 
@@ -157,14 +154,6 @@ To check the status of your job, use the squeue command:
 squeue --user=[your_username]
 ```
 
-## Handling Large Datasets
-
-
-## Interactive Jobs
-
-
-## Long-Running Jobs
-
 
 ## Workflow management
 Workflow management tools provide a means to organize, automate, and connect all the different parts of a research project. Scripts that collect, clean, and analyze data often require different methods, packages, or even software. Without a workflow management tool each step would have to be run by hand every time the data changes or analaysis approaches are refined. This can be tedious and often leads to problems when the steps of a project are run out of order, lowering reproducibility of results. The two main workflow management tools used at EHA are
@@ -285,7 +274,7 @@ list(
 ```
 
 
-
+More code examples on [target-slurm-workflow](https://github.com/ecohealthalliance/eh-server-workflow-run/tree/main/targets)
 
 
 
