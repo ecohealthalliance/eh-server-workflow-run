@@ -168,6 +168,7 @@ Both worklfow managers provide methods to interact direclty the SLURM workload m
 https://snakemake.readthedocs.io/en/stable/
 
 
+
 ## Parallel Processing in R
 
 There are a number of packages that enable parallel processing in R. The [parallel](https://bookdown.org/rdpeng/rprogdatascience/parallel-computation.html) and the [future](https://dcgerard.github.io/advancedr/09_future.html) packages are two common options. See the provided links for more information on each approach. 
@@ -274,9 +275,7 @@ list(
 ```
 
 
+
 More code examples on [target-slurm-workflow](https://github.com/ecohealthalliance/eh-server-workflow-run/tree/main/targets)
-
-
-
 
 
